@@ -9,3 +9,4 @@ dependencies:
   - openpyxl
   - star
   - quarto
+  - snakemake-minimal

@@ -1,0 +1,50 @@
+---
+title: "sciRNAseq report"
+execute:
+  echo: false
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+---
+
+```{python}
+#| echo: false
+import datetime
+from IPython.display import Markdown
+
+Markdown("Generated: " + datetime.datetime.now().isoformat(timespec="minutes", sep=" "))
+```
+
+## STAR solo summary
+
+```{python}
+from tabulate import tabulate
+from IPython.display import Markdown
+
+with open("star-out/Solo.out/Gene/Summary.csv") as f:
+    table = [line.split(",") for line in f]
+
+Markdown(tabulate(
+  table,
+#  headers=["Column 1","Column 2"]
+))
+```
+
+## Barcode rank plot
+
+See [the 10X documentation for an explanation](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/barcode-rank-plot).
+
+```{python}
+import matplotlib.pyplot as plt
+import pandas as pd
+bc = pd.read_table("star-out/Solo.out/Gene/UMIperCellSorted.txt", header=None, names=["count"])
+ax = bc.plot(logx=True, logy=True, legend=False)
+ax.set_title("Cells")
+ax.set_xlabel("Barcodes")
+ax.set_ylabel("UMI counts")
+ax.grid()
+plt.savefig("bcrank.png")
+None
+```
+

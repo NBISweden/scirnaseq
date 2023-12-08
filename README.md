@@ -38,10 +38,20 @@ These commands work for GRCm39:
     wget https://ftp.ensembl.org/pub/release-110/gtf/mus_musculus/Mus_musculus.GRCm39.110.gtf.gz
     gunzip Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
     gunzip Mus_musculus.GRCm39.110.gtf.gz
-    STAR --runThreadN 8 --runMode genomeGenerate --genomeDir . --genomeFastaFiles Mus_musculus.GRCm39.dna.primary_assembly.fa --sjdbGTFfile Mus_musculus.GRCm39.110.gtf
+    STAR --runThreadN 8 --runMode genomeGenerate --genomeDir star --genomeFastaFiles Mus_musculus.GRCm39.dna.primary_assembly.fa --sjdbGTFfile Mus_musculus.GRCm39.110.gtf
 
 
-## Preparing the data
+## Other preparations
+
+- Make FASTQ files of reads (`.fastq.gz`) available in a `reads/` subdirectory.
+  They must have a name containing `_R1_`.
+- Create these files:
+
+  * `ligation-indices-with-linker.fasta`
+  * `ligation-indices.fasta`
+  * `p7-indices.fasta`
+  * `rt-indices.fasta`
+
 
 ## Running the pipeline
 
