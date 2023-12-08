@@ -5,8 +5,9 @@ single-cell combinatorial indexing RNA sequencing (sci-RNA-seq) data.
 
 sci-RNA-seq is described here:
 
-> Martin, B.K., Qiu, C., Nichols, E. et al.
-> Optimized single-nucleus transcriptional profiling by combinatorial indexing. Nat Protoc 18, 188–207 (2023).
+> Martin, B.K., Qiu, C., Nichols, E. *et al.*
+> Optimized single-nucleus transcriptional profiling by combinatorial indexing.
+> *Nat Protoc* **18**, 188–207 (2023).
 > https://doi.org/10.1038/s41596-022-00752-0
 
 The pipeline presented here was developed independently.
