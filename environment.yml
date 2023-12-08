@@ -1,0 +1,11 @@
+name: scirnaseq
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - cutadapt>=4.5
+  - jupyter
+  - pandas
+  - openpyxl
+  - star
+  - quarto
