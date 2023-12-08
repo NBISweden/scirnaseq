@@ -18,9 +18,10 @@ rule report:
     input:
         "star-out/Solo.out/Gene/Summary.csv",
         "star-out/Solo.out/Gene/UMIperCellSorted.txt",
-        qmd="report.qmd"
+    params: qmd=workflow.source_path("report.qmd")
     shell:
-        "quarto render {input.qmd} --to html"
+        "cp -n {params.qmd} . && "
+        "quarto render report.qmd --to html --toc"
 
 
 rule trim_ligation_index:
@@ -90,8 +91,9 @@ rule simulate_cell_barcode:
         ligation_indices_fasta="ligation-indices.fasta",
         rt_indices_fasta="rt-indices.fasta",
         p7_indices_fasta="p7-indices.fasta",
+    params: script=workflow.source_path("simulatecb.py")
     shell:
-        "python3 simulatecb.py"
+        "python3 {params.script}"
         " --list {output.allowed_barcodes_txt}"
         " --r1 {output.r1_fastq}"
         " --r2 {output.r2_fastq}"

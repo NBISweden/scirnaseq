@@ -1,19 +1,18 @@
 # sciRNAseq3 pipeline
 
+A [Snakemake](https://snakemake.readthedocs.io/) pipeline for processing
+single-cell combinatorial indexing RNA sequencing (sci-RNA-seq) data.
+
+sci-RNA-seq is described here:
+
+> Martin, B.K., Qiu, C., Nichols, E. et al.
+> Optimized single-nucleus transcriptional profiling by combinatorial indexing. Nat Protoc 18, 188–207 (2023).
+> https://doi.org/10.1038/s41596-022-00752-0
+
+The pipeline presented here was developed independently.
+
+
 ## Installation
-
-
-1. Install Conda
-2. [Configure the Bioconda channel](http://bioconda.github.io/#usage)
-3. Create the Conda environment:
-
-       conda env create -n scirnaseq -f environment.yml
-4. Activate the environment:
-
-       conda activate scirnaseq
-
-The last step of activating the environment needs to be repeated when
-starting a new shell (for example, after logging in again).
 
 
 ### On rackham (UPPMAX)
@@ -26,34 +25,83 @@ so these commands suffice:
     conda env create -n scirnaseq -f environment.yml
     conda activate scirnaseq
 
+The first and last step need to be repeated when
+starting a new shell (for example, after logging in again).
 
-## Preparing references
+
+### Everywhere else
+
+1. Install Conda
+2. [Configure the Bioconda channel](http://bioconda.github.io/#usage)
+3. Create the Conda environment:
+
+       conda env create -n scirnaseq -f environment.yml
+
+4. Activate the environment:
+
+       conda activate scirnaseq
+
+The last step of activating the environment needs to be repeated when
+starting a new shell (for example, after logging in again).
+
+
+## Before running the pipeline
 
 The reference and annotations need to be prepared.
 This only needs to be done once.
 These commands work for GRCm39:
 
-    mkdir -p ref/GRCm39 && cd ref/GRCm39
+    mkdir -p ref/GRCm39
+    cd ref/GRCm39
     wget https://ftp.ensembl.org/pub/release-110/fasta/mus_musculus/dna/Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
     wget https://ftp.ensembl.org/pub/release-110/gtf/mus_musculus/Mus_musculus.GRCm39.110.gtf.gz
     gunzip Mus_musculus.GRCm39.dna.primary_assembly.fa.gz
     gunzip Mus_musculus.GRCm39.110.gtf.gz
     STAR --runThreadN 8 --runMode genomeGenerate --genomeDir star --genomeFastaFiles Mus_musculus.GRCm39.dna.primary_assembly.fa --sjdbGTFfile Mus_musculus.GRCm39.110.gtf
-
-
-## Other preparations
-
-- Make FASTQ files of reads (`.fastq.gz`) available in a `reads/` subdirectory.
-  They must have a name containing `_R1_`.
-- Create these files:
-
-  * `ligation-indices-with-linker.fasta`
-  * `ligation-indices.fasta`
-  * `p7-indices.fasta`
-  * `rt-indices.fasta`
+    cd ../..
 
 
 ## Running the pipeline
+
+### Prepare the pipeline run directory
+
+1. Create a new directory somewhere and change
+   into it:
+
+       mkdir run01
+       cd run01
+
+2. Make the compressed FASTQ files available in a `reads/` subdirectory.
+   The files must have the extension `.fastq.gz` and contain the text `_R1_`
+   in their name. We recommended using symbolic links.
+3. Make the indexed reference available, for example using a symbolic link:
+
+       ln -s ../ref ref
+
+4. Create these files:
+   * `ligation-indices-with-linker.fasta`
+   * `ligation-indices.fasta`
+   * `p7-indices.fasta`
+   * `rt-indices.fasta`
+
+
+### Running Snakemake
+
+Do a dry-run to test whether everything is set up correctly:
+
+    snakemake --dry-run -p -s path/to/Snakefile
+
+Replace `path/to/Snakefile` appropriately (for example, `../Snakefile`).
+If there are no error messages, run the pipeline:
+
+    snakemake -p --cores=all -s path/to/Snakefile
+
+
+## Pipeline output
+
+* Directory `star-out/Solo.out/Gene/filtered/`
+* `report.html`
+
 
 ## Read structure
 
@@ -62,9 +110,8 @@ and also
 https://teichlab.github.io/scg_lib_structs/methods_html/sci-RNA-seq3.html.
 
 
-### R1
+### Structure of R1
 
-Structure:
 ```
 #{9,10}CAGAGCN{8}#{10}
 ```
@@ -82,9 +129,10 @@ Total: 33 or 34 nt. Sequenced reads have 34 nt.
 
 - R2 is the RNA read
 - I1 is the third index
-- I2 is the sample index (ignored by the pipeline)
+- I2 is the sample index
 
 The I1 and I2 reads do not need to exist as FASTQ files.
+I2 is ignored by the pipeline.
 
 
 ## Pipeline overview
@@ -102,7 +150,5 @@ The I1 and I2 reads do not need to exist as FASTQ files.
 
 ## Links
 
-* An existing pipeline: https://github.com/JunyueC/sci-RNA-seq3_pipeline
-
-Martin, B.K., Qiu, C., Nichols, E. et al. Optimized single-nucleus transcriptional profiling by combinatorial indexing. Nat Protoc 18, 188–207 (2023).
-https://doi.org/10.1038/s41596-022-00752-0
+* The original pipeline published along with the Nature Protocols paper:
+  https://github.com/JunyueC/sci-RNA-seq3_pipeline
