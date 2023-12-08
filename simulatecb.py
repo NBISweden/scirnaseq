@@ -62,6 +62,7 @@ def main():
         for fastq_path in args.fastq:
             #sample = Path(fastq_path.stem).stem  # S1, ..., S96
             sample = re.match(".*_(S[0-9]+)_.*", fastq_path.stem)[1]
+            lane = re.match(".*_(L[0-9]+)_.*", fastq_path.stem)[1]
             p7_index = p7_indices[sample]
             mismatches = [0] * len(p7_index)
             with dnaio.open(fastq_path) as inf:
@@ -80,7 +81,7 @@ def main():
                     barcode_record.qualities = "F" * len(barcode_record.sequence)
                     outf.write(barcode_record, record)
 
-            p7_index_mismatches.append([sample, p7_index] + mismatches)
+            p7_index_mismatches.append([sample, lane, p7_index] + mismatches)
 
 
     if args.p7_stats:
@@ -127,9 +128,9 @@ def write_list(path, *indices_dicts):
 
 def write_mismatch_stats(path, stats):
     with open(path, "w") as f:
-        print("sample", "sequence", "total", "perfect", "one_mismatch", "two_mismatches", sep="\t", file=f)
+        print("sample", "lane", "sequence", "total", "perfect", "one_mismatch", "two_mismatches", sep="\t", file=f)
         for row in stats:
-            print(row[0], row[1], sum(row[2:]), *row[2:5], sep="\t", file=f)
+            print(*row[0:3], sum(row[3:]), *row[3:6], sep="\t", file=f)
 
 
 if __name__ == "__main__":

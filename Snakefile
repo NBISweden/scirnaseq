@@ -19,6 +19,7 @@ rule final:
 rule report:
     output: "report.html"
     input:
+        "p7-mismatches.tsv",
         "star-out/Solo.out/Gene/Summary.csv",
         "star-out/Solo.out/Gene/UMIperCellSorted.txt",
     params: qmd=workflow.source_path("report.qmd")
@@ -89,6 +90,7 @@ rule simulate_cell_barcode:
         r1_fastq="reads.1.fastq.gz",
         r2_fastq="reads.2.fastq.gz",
         allowed_barcodes_txt="allowed-barcodes.txt",
+        p7_mismatch_stats_txt="p7-mismatches.tsv",
     input:
         round2_fastqs=ROUND2_FASTQS,
         ligation_indices_fasta="ligation-indices.fasta",
@@ -100,6 +102,7 @@ rule simulate_cell_barcode:
         " --list {output.allowed_barcodes_txt}"
         " --r1 {output.r1_fastq}"
         " --r2 {output.r2_fastq}"
+        " --p7-stats {output.p7_mismatch_stats_txt}"
         " {input.ligation_indices_fasta}"
         " {input.rt_indices_fasta}"
         " {input.p7_indices_fasta}"

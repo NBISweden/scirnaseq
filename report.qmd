@@ -48,3 +48,13 @@ plt.savefig("bcrank.png")
 None
 ```
 
+## P7 index mismatch statistics
+
+```{python}
+import pandas as pd
+
+df = pd.read_table("p7-mismatches.tsv", index_col=(0, 1))
+#df.insert(3, "perfect_percent", (df["perfect"] / df["total"] * 100.).round(1))
+df["perfect_percent"] = (df["perfect"] / df["total"] * 100.).round(1)
+df
+```
