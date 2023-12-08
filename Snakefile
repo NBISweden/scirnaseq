@@ -5,6 +5,9 @@ R1_FASTQS = list(Path("reads/").glob("*_R1_*.fastq.gz"))
 R2_FASTQS = [Path(str(r1).replace("_R1_", "_R2_")) for r1 in R1_FASTQS]
 ROUND2_FASTQS = [Path("round2/" + str(r1.name).replace("_R1_", "_")) for r1 in R1_FASTQS]
 
+if not R1_FASTQS:
+    sys.exit("No FASTQ files found in reads/ directory")
+
 print("Files:")
 for r1, r2 in zip(R1_FASTQS, R2_FASTQS):
     print("-", r1, r2)
