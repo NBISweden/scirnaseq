@@ -10,3 +10,4 @@ dependencies:
   - star
   - quarto
   - snakemake-minimal
+  - tinyalign
