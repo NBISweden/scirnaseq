@@ -44,7 +44,7 @@ ax.set_title("Cells")
 ax.set_xlabel("Barcodes")
 ax.set_ylabel("UMI counts")
 ax.grid()
-plt.savefig("bcrank.png")
+plt.savefig("barcode-ranks.pdf")
 None
 ```
 
@@ -54,7 +54,6 @@ None
 import pandas as pd
 
 df = pd.read_table("p7-mismatches.tsv", index_col=(0, 1))
-#df.insert(3, "perfect_percent", (df["perfect"] / df["total"] * 100.).round(1))
 df["perfect_percent"] = (df["perfect"] / df["total"] * 100.).round(1)
 df
 ```
