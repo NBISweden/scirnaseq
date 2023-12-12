@@ -79,8 +79,8 @@ rule trim_umi_and_rt_index:
 
 rule simulate_cell_barcode:
     output:
-        r1_fastq="reads.1.fastq.gz",
-        r2_fastq="reads.2.fastq.gz",
+        r1_fastq="merged-reads/reads.1.fastq.gz",
+        r2_fastq="merged-reads/reads.2.fastq.gz",
         allowed_barcodes_txt="allowed-barcodes.txt",
         p7_mismatch_stats_txt="p7-mismatches.tsv",
     input:
@@ -109,8 +109,8 @@ rule star_solo:
     input:
         allowed_barcodes_txt="allowed-barcodes.txt",
         ref="ref/GRCm39/star/Genome",
-        r1_fastq="reads.1.fastq.gz",
-        r2_fastq="reads.2.fastq.gz",
+        r1_fastq="merged-reads/reads.1.fastq.gz",
+        r2_fastq="merged-reads/reads.2.fastq.gz",
     threads: 99
     shell:
         "STAR"
