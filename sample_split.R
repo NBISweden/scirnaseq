@@ -1,6 +1,6 @@
 # 
 # Example run
-# Rscript sample_split.R -i filtered/ -m filtered/samples.tsv -o filtered/per_sample
+# Rscript sample_split.R -i filtered/ -m filtered/samples.tsv --pdf plots.pdf -o filtered/per_sample
 
 
 #######################################
@@ -16,9 +16,11 @@ library(optparse)
 option_list = list(
   make_option(c("-i", "--indir"), type="character", default=NULL, 
               help="Input directory", metavar="character"),
-  make_option(c("-o", "--outdir"), type="character", default=NULL, 
+  make_option(c("-o", "--outdir"), type="character", default=NULL,
               help="Output directory", metavar="character"),
-  make_option(c("-m", "--metadata"), type="character", default=NULL, 
+  make_option(c("--pdf"), type="character", default=NULL,
+              help="Path to output PDF", metavar="character"),
+  make_option(c("-m", "--metadata"), type="character", default=NULL,
               help="Tsv file with barcode to sample information", metavar="character")
 ); 
 
@@ -30,7 +32,7 @@ if(!dir.exists(params$outdir)){
   dir.create(params$outdir)
 }
 
-plotfile = file.path(params$outdir, "sample_stats.pdf")
+plotfile = params$pdf
 
 #######################################
 # Read data
@@ -71,6 +73,7 @@ cat("Cells per sample:\n", paste(names(t),": ",t,"\n"))
 #######################################
 
 pdf(plotfile,10,6)
+
 # stats on number of cells per sample/replicate
 qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
 col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
