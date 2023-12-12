@@ -8,9 +8,6 @@ ROUND2_FASTQS = [Path("round2/" + str(r1.name).replace("_R1_", "_")) for r1 in R
 if not R1_FASTQS:
     sys.exit("No FASTQ files found in reads/ directory")
 
-print("Files:")
-for r1, r2 in zip(R1_FASTQS, R2_FASTQS):
-    print("-", r1, r2)
 
 rule final:
     input: "report.html"
