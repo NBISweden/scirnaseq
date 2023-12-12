@@ -8,12 +8,12 @@ def natural_sort_key(s):
         for text in re.split("([0-9]+)", str(s))
     ]
 
-R1_FASTQS = sorted(Path("reads/").glob("*_R1_*.fastq.gz"), key=natural_sort_key)
+R1_FASTQS = sorted(Path("raw-reads/").glob("*_R1_*.fastq.gz"), key=natural_sort_key)
 R2_FASTQS = [Path(str(r1).replace("_R1_", "_R2_")) for r1 in R1_FASTQS]
 ROUND2_FASTQS = [Path("round2/" + str(r1.name).replace("_R1_", "_")) for r1 in R1_FASTQS]
 
 if not R1_FASTQS:
-    sys.exit("No FASTQ files found in reads/ directory")
+    sys.exit("No FASTQ files found in raw-reads/ directory")
 
 
 rule final:
@@ -37,8 +37,8 @@ rule trim_ligation_index:
         fastq="round1/{name}_{extra}.fastq.gz",
         json="round1/{name}_{extra}.cutadapt.json",
     input:
-        r1_fastq="reads/{name}_R1_{extra}.fastq.gz",
-        r2_fastq="reads/{name}_R2_{extra}.fastq.gz",
+        r1_fastq="raw-reads/{name}_R1_{extra}.fastq.gz",
+        r2_fastq="raw-reads/{name}_R2_{extra}.fastq.gz",
         ligation_indices_with_linker_fasta="ligation-indices-with-linker.fasta",
     log:
         "round1/{name}_{extra}.cutadapt.log"

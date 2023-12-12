@@ -72,7 +72,7 @@ These commands work for GRCm39:
        mkdir run01
        cd run01
 
-2. Make the compressed FASTQ files available in a `reads/` subdirectory.
+2. Make the compressed FASTQ files available in a `raw-reads/` subdirectory.
    The files must have the extension `.fastq.gz` and contain the text `_R1_`
    in their name. We recommended using symbolic links.
 3. Make the indexed reference available, for example using a symbolic link:
