@@ -11,3 +11,6 @@ dependencies:
   - quarto
   - snakemake-minimal
   - tinyalign
+  - r-optparse
+  - r-seurat
+
