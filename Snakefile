@@ -1,7 +1,14 @@
 from pathlib import Path
+import re
 
+# https://stackoverflow.com/a/16090640/715090
+def natural_sort_key(s):
+    return [
+        int(text) if text.isdigit() else text.lower()
+        for text in re.split("([0-9]+)", str(s))
+    ]
 
-R1_FASTQS = list(Path("reads/").glob("*_R1_*.fastq.gz"))
+R1_FASTQS = sorted(Path("reads/").glob("*_R1_*.fastq.gz"), key=natural_sort_key)
 R2_FASTQS = [Path(str(r1).replace("_R1_", "_R2_")) for r1 in R1_FASTQS]
 ROUND2_FASTQS = [Path("round2/" + str(r1.name).replace("_R1_", "_")) for r1 in R1_FASTQS]
 
