@@ -5,6 +5,7 @@ channels:
 dependencies:
   - cutadapt>=4.5
   - jupyter
+  - matplotlib
   - pandas
   - openpyxl
   - star
@@ -13,4 +14,3 @@ dependencies:
   - tinyalign
   - r-optparse
   - r-seurat
-
