@@ -62,7 +62,10 @@ def main():
         for fastq_path in args.fastq:
             #sample = Path(fastq_path.stem).stem  # S1, ..., S96
             sample = re.search("_(S[0-9]+)_", fastq_path.stem)[1]
-            lane = re.search("_(L[0-9]+)_", fastq_path.stem)[1]
+            if lane_match := re.search("_(L[0-9]+)_", fastq_path.stem):
+                lane = lane_match[1]
+            else:
+                lane = None
             p7_index = p7_indices[sample]
             mismatches = [0] * len(p7_index)
             with dnaio.open(fastq_path) as inf:
