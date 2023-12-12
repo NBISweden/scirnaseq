@@ -17,7 +17,7 @@ if not R1_FASTQS:
 
 
 rule final:
-    input: "report.html"
+    input: "report.html", "samples.pdf"
 
 
 rule trim_ligation_index:
@@ -138,3 +138,19 @@ rule report:
     shell:
         "cp -n {params.qmd} . && "
         "quarto render report.qmd --to html --toc"
+
+
+rule split_samples_and_plot:
+    output:
+        directory("per-sample/"),
+        pdf="samples.pdf",
+    input:
+        expand("star-out/Solo.out/Gene/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
+        samples_tsv="samples.tsv",
+    params: script=Path(workflow.basedir) / "sample_split.R"
+    shell:
+        "Rscript {params.script}"
+        " -i star-out/Solo.out/Gene/filtered"
+        " -m {input.samples_tsv}"
+        " --pdf {output.pdf}"
+        " -o per-sample/"
