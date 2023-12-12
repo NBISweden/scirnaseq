@@ -85,6 +85,12 @@ These commands work for GRCm39:
    * `p7-indices.fasta`
    * `rt-indices.fasta`
 
+5. Create a samplesheet in TSV format named `samples.tsv`:
+   It needs to have these columns:
+   - `Barcode`: The 10-nt RT index
+   - `Sample`: Sample name
+   - `Replicate`: Replicate name (for example, use numbers 1, 2, 3, ...)
+
 
 ### Running Snakemake
 
@@ -98,10 +104,23 @@ If there are no error messages, run the pipeline:
     snakemake -p --cores=all -s path/to/Snakefile
 
 
-## Pipeline output
+## Pipeline result files
 
-* Directory `star-out/Solo.out/Gene/filtered/`
-* `report.html`
+These are the relevant result files created when running the pipeline.
+
+* `report.html`: QC report
+* `p7-mismatches.tsv`: Statistics with P7 index mismatches.
+  Also shown in `report.html`.
+* `per-sample/`: Directory with per-sample Seurat objects (`.Rds`)
+* `star-out/Solo.out/Gene/filtered/`:
+  Directory with Seurat-compatible counts matrix with overall counts.
+  This is not split by sample.
+* `samples.pdf`: Various plots:
+  - Number of cells per sample and replicate
+  - Proportion of replicate per sample
+  - nFeature_RNA
+  - nCount_RNA
+  - Top expressed genes
 
 
 ## Read structure
