@@ -20,18 +20,6 @@ rule final:
     input: "report.html"
 
 
-rule report:
-    output: "report.html"
-    input:
-        "p7-mismatches.tsv",
-        "star-out/Solo.out/Gene/Summary.csv",
-        "star-out/Solo.out/Gene/UMIperCellSorted.txt",
-    params: qmd=Path(workflow.basedir) / "report.qmd"
-    shell:
-        "cp -n {params.qmd} . && "
-        "quarto render report.qmd --to html --toc"
-
-
 rule trim_ligation_index:
     output:
         fastq="round1/{name}_{extra}.fastq.gz",
@@ -138,3 +126,15 @@ rule star_solo:
         " --soloUMIstart 31"
         " --soloUMIlen 8"
         " --outSAMtype BAM Unsorted"
+
+
+rule report:
+    output: "report.html"
+    input:
+        "p7-mismatches.tsv",
+        "star-out/Solo.out/Gene/Summary.csv",
+        "star-out/Solo.out/Gene/UMIperCellSorted.txt",
+    params: qmd=Path(workflow.basedir) / "report.qmd"
+    shell:
+        "cp -n {params.qmd} . && "
+        "quarto render report.qmd --to html --toc"
