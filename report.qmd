@@ -2,6 +2,7 @@
 title: "sciRNAseq report"
 execute:
   echo: false
+toc: true
 format:
   html:
     embed-resources: true
