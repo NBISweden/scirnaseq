@@ -105,7 +105,7 @@ rule star_solo:
     output:
         "star-out/Solo.out/Gene/Summary.csv",
         "star-out/Solo.out/Gene/UMIperCellSorted.txt",
-        "star-out/Solo.out/Gene/filtered/matrix.mtx",
+        expand("star-out/Solo.out/Gene/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
     input:
         allowed_barcodes_txt="allowed-barcodes.txt",
         ref="ref/GRCm39/star/Genome",
