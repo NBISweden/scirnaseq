@@ -50,10 +50,18 @@ None
 
 ## P7 index mismatch statistics
 
+This table is also available in tab-separated value format in
+`p7-mismatches.tsv`.
+
 ```{python}
 import pandas as pd
-
-df = pd.read_table("p7-mismatches.tsv", index_col=(0, 1))
+df = pd.read_table("p7-mismatches.tsv", index_col=0)
 df["perfect_percent"] = (df["perfect"] / df["total"] * 100.).round(1)
+if df["lane"].isna().all():
+    del df["lane"]
+else:
+    df = df.set_index("lane", append=True)
+
+pd.set_option("display.max_rows", None)
 df
 ```
