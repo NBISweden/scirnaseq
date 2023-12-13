@@ -119,13 +119,14 @@ rule star_solo:
         " --readFilesIn {input.r2_fastq} {input.r1_fastq}"
         " --runThreadN {threads}"
         " --outFileNamePrefix star-out/"
+        " --outSAMtype BAM Unsorted"
         " --soloType CB_UMI_Simple"
         " --soloCBwhitelist {input.allowed_barcodes_txt}"
         " --soloCBstart 1"
         " --soloCBlen 30"
         " --soloUMIstart 31"
         " --soloUMIlen 8"
-        " --outSAMtype BAM Unsorted"
+        " --soloCellFilter CellRanger2.2 200000 0.85 8"
 
 
 rule report:
