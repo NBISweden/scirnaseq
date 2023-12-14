@@ -114,7 +114,9 @@ These are the relevant result files created when running the pipeline.
 * `per-sample/`: Directory with per-sample Seurat objects (`.Rds`)
 * `star-out/Solo.out/Gene/filtered/`:
   Directory with Seurat-compatible counts matrix with overall counts.
-  This is not split by sample.
+  This is not split by sample and uses default STAR solo filtering.
+* `filtered/`: Count matrix using adjusted STAR solo filtering that should
+  result in more cells.
 * `samples.pdf`: Various plots:
   - Number of cells per sample and replicate
   - Proportion of replicate per sample
