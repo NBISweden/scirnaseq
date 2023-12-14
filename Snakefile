@@ -80,14 +80,14 @@ rule write_allowed_barcodes:
     output:
         allowed_barcodes_txt="allowed-barcodes.txt"
     input:
-        ligation_indices_fasta="ligation-indices.fasta",
         rt_indices_fasta="rt-indices.fasta",
+        ligation_indices_fasta="ligation-indices.fasta",
         p7_indices_fasta="p7-indices.fasta",
     params: script=Path(workflow.basedir) / "allowedbarcodes.py"
     shell:
         "python3 {params.script}"
-        " {input.ligation_indices_fasta}"
         " {input.rt_indices_fasta}"
+        " {input.ligation_indices_fasta}"
         " {input.p7_indices_fasta}"
         " > {output.allowed_barcodes_txt}.tmp"
         " &&"
@@ -101,8 +101,8 @@ rule simulate_cell_barcode:
         p7_mismatch_stats_tsv="cb-reads/{name}.p7mismatches.tsv"
     input:
         fastq="round2/{name}.fastq.gz",
-        ligation_indices_fasta="ligation-indices.fasta",
         rt_indices_fasta="rt-indices.fasta",
+        ligation_indices_fasta="ligation-indices.fasta",
         p7_indices_fasta="p7-indices.fasta",
     params: script=Path(workflow.basedir) / "simulatecb.py"
     shell:
@@ -110,8 +110,8 @@ rule simulate_cell_barcode:
         " --r1 {output.r1_fastq}"
         " --r2 {output.r2_fastq}"
         " --p7-stats {output.p7_mismatch_stats_tsv}"
-        " {input.ligation_indices_fasta}"
         " {input.rt_indices_fasta}"
+        " {input.ligation_indices_fasta}"
         " {input.p7_indices_fasta}"
         " {input.fastq}"
 

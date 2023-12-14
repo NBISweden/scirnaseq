@@ -38,16 +38,16 @@ def main():
         metavar="FILE",
         help="Write P7 index (I1) statistics to FILE",
     )
-    parser.add_argument("ligation_indices_fasta", type=Path)
     parser.add_argument("rt_indices_fasta", type=Path)
+    parser.add_argument("ligation_indices_fasta", type=Path)
     parser.add_argument("p7_indices_fasta", type=Path)
     parser.add_argument("fastq", nargs="+", type=Path)
     args = parser.parse_args()
 
     # All ligation indices end with "T".
     # We append an "A" to those that only have 9 nucleotides.
-    ligation_indices = make_all_same_length(read_fasta(args.ligation_indices_fasta))
     rt_indices = read_fasta(args.rt_indices_fasta)
+    ligation_indices = make_all_same_length(read_fasta(args.ligation_indices_fasta))
     p7_indices = read_fasta(args.p7_indices_fasta)
 
     if args.list:
