@@ -166,11 +166,15 @@ rule star_solo_cell_filter:
         expand("filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
     input:
         expand("star-out/Solo.out/Gene/raw/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv"))
-    log: "filtered/Log.out"
+    params: script=Path(workflow.basedir) / "filtercells.py"
+    log: "filtered/filtercells.txt"
     shell:
-        "cd filtered"
-        "; "
-        "STAR --runMode soloCellFiltering ../star-out/Solo.out/Gene/raw/ ./ --soloCellFilter CellRanger2.2 200000 0.85 8"
+        "python3 {params.script}"
+        " --umis 200"
+        " star-out/Solo.out/Gene/raw/"
+        " filtered/"
+        " 2> {log}"
+
 
 rule report:
     output: "report.html"

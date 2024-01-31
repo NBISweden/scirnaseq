@@ -18,9 +18,6 @@ def main():
     parser.add_argument("target", type=Path, help="Output directory (must not exist)")
     args = parser.parse_args()
 
-    if args.target.exists():
-        parser.error(f"Target {args.target} already exists")
-
     log("Reading barcodes.tsv(.gz) ...")
     try:
         with xopen(args.raw / "barcodes.tsv") as f:
@@ -52,7 +49,7 @@ def main():
     log(f"Filtered matrix: {filtered_matrix.shape[1]} cell barcodes; {filtered_matrix.shape[0]} features")
 
     log("Writing output ...")
-    args.target.mkdir()
+    args.target.mkdir(exist_ok=True)
     with xopen(args.target / barcodes_name, mode="w") as f:
         for barcode in filtered_barcodes:
             f.write(barcode)
