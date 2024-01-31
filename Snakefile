@@ -158,6 +158,7 @@ rule star_solo:
         " --soloCBlen 30"
         " --soloUMIstart 31"
         " --soloUMIlen 8"
+        " --outSAMattributes NH HI nM AS CR UR GX GN sS sQ sM"
 
 
 rule star_solo_cell_filter:
