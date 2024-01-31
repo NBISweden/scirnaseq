@@ -17,6 +17,28 @@ from IPython.display import Markdown
 Markdown("Generated: " + datetime.datetime.now().isoformat(timespec="minutes", sep=" "))
 ```
 
+## STAR mapping summary
+
+```{python}
+from tabulate import tabulate
+from IPython.display import Markdown
+
+with open("star-out/Log.final.out") as f:
+    table = []
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue
+        if "|" not in line:
+            table.append([line, ""])
+        else:
+            table.append([field.strip() for field in line.split("|")])
+
+Markdown(tabulate(
+  table,
+))
+```
+
 ## STAR solo summary
 
 ```{python}
