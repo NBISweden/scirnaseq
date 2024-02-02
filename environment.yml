@@ -13,5 +13,6 @@ dependencies:
   - snakemake-minimal
   - tinyalign
   - scipy
+  - pysam
   - r-optparse
   - r-seurat
