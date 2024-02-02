@@ -21,7 +21,7 @@ rule final:
 
 rule trim_ligation_index:
     output:
-        fastq="out/round1/{name}_{extra}.fastq.gz",
+        fastq=temp("out/round1/{name}_{extra}.fastq.gz"),
         json="out/round1/{name}_{extra}.cutadapt.json",
     input:
         r1_fastq="raw-reads/{name}_R1_{extra}.fastq.gz",
@@ -48,7 +48,7 @@ rule trim_ligation_index:
 
 rule trim_umi_and_rt_index:
     output:
-        fastq="out/round2/{name}.fastq.gz",
+        fastq=temp("out/round2/{name}.fastq.gz"),
         json="out/round2/{name}.cutadapt.json",
     input:
         fastq="out/round1/{name}.fastq.gz",
@@ -96,8 +96,8 @@ rule write_allowed_barcodes:
 
 rule simulate_cell_barcode:
     output:
-        r1_fastq="out/cb-reads/{name}.1.fastq.gz",
-        r2_fastq="out/cb-reads/{name}.2.fastq.gz",
+        r1_fastq=temp("out/cb-reads/{name}.1.fastq.gz"),
+        r2_fastq=temp("out/cb-reads/{name}.2.fastq.gz"),
         p7_mismatch_stats_tsv="out/cb-reads/{name}.p7mismatches.tsv"
     input:
         fastq="out/round2/{name}.fastq.gz",
