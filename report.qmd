@@ -23,7 +23,7 @@ Markdown("Generated: " + datetime.datetime.now().isoformat(timespec="minutes", s
 from tabulate import tabulate
 from IPython.display import Markdown
 
-with open("star-out/Log.final.out") as f:
+with open("star/Log.final.out") as f:
     table = []
     for line in f:
         line = line.strip()
@@ -45,7 +45,7 @@ Markdown(tabulate(
 from tabulate import tabulate
 from IPython.display import Markdown
 
-with open("star-out/Solo.out/Gene/Summary.csv") as f:
+with open("star/Solo.out/Gene/Summary.csv") as f:
     table = [line.split(",") for line in f]
 
 Markdown(tabulate(
@@ -61,7 +61,7 @@ See [the 10X documentation for an explanation](https://support.10xgenomics.com/s
 ```{python}
 import matplotlib.pyplot as plt
 import pandas as pd
-bc = pd.read_table("star-out/Solo.out/Gene/UMIperCellSorted.txt", header=None, names=["count"])
+bc = pd.read_table("star/Solo.out/Gene/UMIperCellSorted.txt", header=None, names=["count"])
 ax = bc.plot(logx=True, logy=True, legend=False)
 ax.set_title("Cells")
 ax.set_xlabel("Barcodes")

@@ -16,19 +16,19 @@ if not R1_FASTQS:
 
 
 rule final:
-    input: "report.html", "samples.pdf"
+    input: "out/report.html", "out/samples.pdf"
 
 
 rule trim_ligation_index:
     output:
-        fastq="round1/{name}_{extra}.fastq.gz",
-        json="round1/{name}_{extra}.cutadapt.json",
+        fastq="out/round1/{name}_{extra}.fastq.gz",
+        json="out/round1/{name}_{extra}.cutadapt.json",
     input:
         r1_fastq="raw-reads/{name}_R1_{extra}.fastq.gz",
         r2_fastq="raw-reads/{name}_R2_{extra}.fastq.gz",
         ligation_indices_with_linker_fasta="ligation-indices-with-linker.fasta",
     log:
-        "round1/{name}_{extra}.cutadapt.log"
+        "out/round1/{name}_{extra}.cutadapt.log"
     threads: 8
     shell:
         "cutadapt"
@@ -48,13 +48,13 @@ rule trim_ligation_index:
 
 rule trim_umi_and_rt_index:
     output:
-        fastq="round2/{name}.fastq.gz",
-        json="round2/{name}.cutadapt.json",
+        fastq="out/round2/{name}.fastq.gz",
+        json="out/round2/{name}.cutadapt.json",
     input:
-        fastq="round1/{name}.fastq.gz",
+        fastq="out/round1/{name}.fastq.gz",
         rt_indices_fasta="rt-indices.fasta",
     log:
-        "round2/{name}.cutadapt.log"
+        "out/round2/{name}.cutadapt.log"
     threads: 8
     shell:
         "cutadapt"
@@ -70,15 +70,15 @@ rule trim_umi_and_rt_index:
         " --no-indels"
         " --rename '{{header}} umi={{r1.cut_prefix}} rt_index={{r1.adapter_name}}'"
         " --discard-untrimmed"
-        #" --untrimmed-output untrimmed2/${name}.1.fastq.gz"
-        #" --untrimmed-paired-output untrimmed2/${name}.2.fastq.gz"
+        #" --untrimmed-output out/untrimmed2/${name}.1.fastq.gz"
+        #" --untrimmed-paired-output out/untrimmed2/${name}.2.fastq.gz"
         " {input.fastq}"
         " > {log}"
 
 
 rule write_allowed_barcodes:
     output:
-        allowed_barcodes_txt="allowed-barcodes.txt"
+        allowed_barcodes_txt="out/allowed-barcodes.txt"
     input:
         rt_indices_fasta="rt-indices.fasta",
         ligation_indices_fasta="ligation-indices.fasta",
@@ -96,11 +96,11 @@ rule write_allowed_barcodes:
 
 rule simulate_cell_barcode:
     output:
-        r1_fastq="cb-reads/{name}.1.fastq.gz",
-        r2_fastq="cb-reads/{name}.2.fastq.gz",
-        p7_mismatch_stats_tsv="cb-reads/{name}.p7mismatches.tsv"
+        r1_fastq="out/cb-reads/{name}.1.fastq.gz",
+        r2_fastq="out/cb-reads/{name}.2.fastq.gz",
+        p7_mismatch_stats_tsv="out/cb-reads/{name}.p7mismatches.tsv"
     input:
-        fastq="round2/{name}.fastq.gz",
+        fastq="out/round2/{name}.fastq.gz",
         rt_indices_fasta="rt-indices.fasta",
         ligation_indices_fasta="ligation-indices.fasta",
         p7_indices_fasta="p7-indices.fasta",
@@ -118,9 +118,9 @@ rule simulate_cell_barcode:
 
 rule merge_p7_mismatch_stats:
     output:
-        tsv="p7-mismatches.tsv",
+        tsv="out/p7-mismatches.tsv",
     input:
-        expand("cb-reads/{name}.p7mismatches.tsv", name=NAMES)
+        expand("out/cb-reads/{name}.p7mismatches.tsv", name=NAMES)
     shell:
         "head -n1 {input[0]} > {output}; "
         "for f in {input}; do sed 1d $f; done >> {output}"
@@ -128,21 +128,21 @@ rule merge_p7_mismatch_stats:
 
 rule star_solo:
     output:
-        "star-out/Solo.out/Gene/Summary.csv",
-        "star-out/Solo.out/Gene/UMIperCellSorted.txt",
+        "out/star/Solo.out/Gene/Summary.csv",
+        "out/star/Solo.out/Gene/UMIperCellSorted.txt",
         expand(
-            "star-out/Solo.out/Gene/{which}/{name}",
+            "out/star/Solo.out/Gene/{which}/{name}",
             which=("filtered", "raw"),
             name=("matrix.mtx", "features.tsv", "barcodes.tsv")
         ),
     input:
-        allowed_barcodes_txt="allowed-barcodes.txt",
+        allowed_barcodes_txt="out/allowed-barcodes.txt",
         ref="ref/GRCm39/star/Genome",
-        r1_fastqs=expand("cb-reads/{name}.1.fastq.gz", name=NAMES),
-        r2_fastqs=expand("cb-reads/{name}.2.fastq.gz", name=NAMES),
+        r1_fastqs=expand("out/cb-reads/{name}.1.fastq.gz", name=NAMES),
+        r2_fastqs=expand("out/cb-reads/{name}.2.fastq.gz", name=NAMES),
     params:
-        r1_fastqs=",".join(f"cb-reads/{name}.1.fastq.gz" for name in NAMES),
-        r2_fastqs=",".join(f"cb-reads/{name}.2.fastq.gz" for name in NAMES),
+        r1_fastqs=",".join(f"out/cb-reads/{name}.1.fastq.gz" for name in NAMES),
+        r2_fastqs=",".join(f"out/cb-reads/{name}.2.fastq.gz" for name in NAMES),
     threads: 99
     shell:
         "STAR"
@@ -150,7 +150,7 @@ rule star_solo:
         " --readFilesCommand zcat"
         " --readFilesIn {params.r2_fastqs} {params.r1_fastqs}"
         " --runThreadN {threads}"
-        " --outFileNamePrefix star-out/"
+        " --outFileNamePrefix out/star/"
         " --outSAMtype BAM Unsorted"
         " --soloType CB_UMI_Simple"
         " --soloCBwhitelist {input.allowed_barcodes_txt}"
@@ -163,42 +163,43 @@ rule star_solo:
 
 rule star_solo_cell_filter:
     output:
-        expand("filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
+        expand("out/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
     input:
-        expand("star-out/Solo.out/Gene/raw/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv"))
+        expand("out/star/Solo.out/Gene/raw/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv"))
     params: script=Path(workflow.basedir) / "filtercells.py"
-    log: "filtered/filtercells.txt"
+    log: "out/filtered/filtercells.log"
     shell:
         "python3 {params.script}"
         " --umis 200"
-        " star-out/Solo.out/Gene/raw/"
-        " filtered/"
+        " out/star/Solo.out/Gene/raw/"
+        " out/filtered/"
         " 2> {log}"
 
 
 rule report:
-    output: "report.html"
+    output: "out/report.html"
     input:
-        "p7-mismatches.tsv",
-        "star-out/Solo.out/Gene/Summary.csv",
-        "star-out/Solo.out/Gene/UMIperCellSorted.txt",
+        "out/p7-mismatches.tsv",
+        "out/star/Solo.out/Gene/Summary.csv",
+        "out/star/Solo.out/Gene/UMIperCellSorted.txt",
     params: qmd=Path(workflow.basedir) / "report.qmd"
     shell:
-        "cp -n {params.qmd} . && "
-        "quarto render report.qmd --to html --toc"
+        "cp -n {params.qmd} out/ && "
+        "quarto render out/report.qmd --execute-dir out/ --to html --toc && "
+        "rm out/report.qmd"
 
 
 rule split_samples_and_plot:
     output:
-        directory("per-sample/"),
-        pdf="samples.pdf",
+        directory("out/per-sample/"),
+        pdf="out/samples.pdf",
     input:
-        expand("filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
+        expand("out/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
         samples_tsv="samples.tsv",
     params: script=Path(workflow.basedir) / "sample_split.R"
     shell:
         "Rscript {params.script}"
-        " -i filtered/"
+        " -i out/filtered/"
         " -m {input.samples_tsv}"
         " --pdf {output.pdf}"
-        " -o per-sample/"
+        " -o out/per-sample/"
