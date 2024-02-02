@@ -71,6 +71,20 @@ plt.savefig("barcode-ranks.pdf")
 None
 ```
 
+## Saturation plot
+
+```{python}
+import matplotlib.pyplot as plt
+import pandas as pd
+df = pd.read_table("saturation.tsv", sep="\t")
+ax = df.plot(x="n", y="saturation", kind="line", ylim=(0, 1.0), xlabel="No. of reads", ylabel="Saturation", legend=False)
+#ax.set_title(...)
+ax.grid(axis="y")
+n = df.iloc[-1].n
+sat = df.iloc[-1].saturation
+_ = ax.annotate(f"{sat:.4f}", (n, sat), xytext=(n, sat + 0.05), bbox=dict(facecolor="white"))
+```
+
 ## P7 index mismatch statistics
 
 This table is also available in tab-separated value format in

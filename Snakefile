@@ -176,12 +176,27 @@ rule star_solo_cell_filter:
         " 2> {log}"
 
 
+rule saturation:
+    output:
+        "out/saturation.tsv"
+    input:
+        bam="out/star/Aligned.out.bam",
+        barcodes="out/filtered/barcodes.tsv"
+    params: script=Path(workflow.basedir) / "saturation.py"
+    shell:
+        "python3 {params.script}"
+        " --barcodes {input.barcodes}"
+        " {input.bam}"
+        " > {output}"
+
+
 rule report:
     output: "out/report.html"
     input:
         "out/p7-mismatches.tsv",
         "out/star/Solo.out/Gene/Summary.csv",
         "out/star/Solo.out/Gene/UMIperCellSorted.txt",
+        "out/saturation.tsv",
     params: qmd=Path(workflow.basedir) / "report.qmd"
     shell:
         "cp -n {params.qmd} out/ && "
