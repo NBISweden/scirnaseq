@@ -14,5 +14,6 @@ dependencies:
   - tinyalign
   - scipy
   - pysam
+  - samtools
   - r-optparse
   - r-seurat
