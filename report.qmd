@@ -42,9 +42,6 @@ Markdown(tabulate(
 ## STAR solo summary
 
 ```{python}
-from tabulate import tabulate
-from IPython.display import Markdown
-
 with open("star/Solo.out/Gene/Summary.csv") as f:
     table = [line.split(",") for line in f]
 
@@ -71,18 +68,37 @@ plt.savefig("barcode-ranks.pdf")
 None
 ```
 
-## Saturation plot
+## Number of cells
 
 ```{python}
-import matplotlib.pyplot as plt
-import pandas as pd
+with open("filtered/barcodes.tsv") as f:
+    n_cells = 0
+    for line in f:
+        n_cells += 1
+
+Markdown(
+    f"Number of cells after custom filtering: {n_cells}"
+)
+```
+
+
+## Sequencing saturation
+
+```{python}
 df = pd.read_table("saturation.tsv", sep="\t")
-ax = df.plot(x="n", y="saturation", kind="line", ylim=(0, 1.0), xlabel="No. of reads", ylabel="Saturation", legend=False)
-#ax.set_title(...)
+df["per_cell"] = df["n"] / n_cells
+ax = df.plot(x="per_cell", y="saturation", kind="line", ylim=(0, 1.0), xlabel="Mean reads per cell", ylabel="Saturation", legend=False)
+ax.set_title("Sequencing saturation")
 ax.grid(axis="y")
-n = df.iloc[-1].n
+x = df.iloc[-1].per_cell
 sat = df.iloc[-1].saturation
-_ = ax.annotate(f"{sat:.4f}", (n, sat), xytext=(n, sat + 0.05), bbox=dict(facecolor="white"))
+_ = ax.annotate(f"{sat:.4f}", (x, sat), xytext=(x, sat + 0.05), bbox=dict(facecolor="white"))
+```
+
+```{python}
+Markdown(
+    f"Mean reads per cell: {x:.1f}\n\nSaturation: {sat:.4f}"
+)
 ```
 
 ## P7 index mismatch statistics
@@ -91,7 +107,6 @@ This table is also available in tab-separated value format in
 `p7-mismatches.tsv`.
 
 ```{python}
-import pandas as pd
 df = pd.read_table("p7-mismatches.tsv", index_col=0)
 df["perfect_percent"] = (df["perfect"] / df["total"] * 100.).round(1)
 if df["lane"].isna().all():

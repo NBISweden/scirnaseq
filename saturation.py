@@ -26,16 +26,18 @@ def main():
 
     if args.barcodes:
         allowed_cell_barcodes = set(read_barcodes(args.barcodes))
-        print("Read file with", len(allowed_cell_barcodes), "allowed cell barcodes", file=sys.stderr)
+        n_cells = len(allowed_cell_barcodes)
+        print("Read file with", n_cells, "allowed cell barcodes", file=sys.stderr)
     else:
         allowed_cell_barcodes = None
+        n_cells = 0
 
     combinations = set()
     umis = set()
     n_not_allowed = 0
 
-    print("n", "saturation", sep="\t")
-    print(0, 0, sep="\t")
+    print("n", "n_per_cell", "saturation", sep="\t")
+    print(0, 0, 0, sep="\t")
     n = 0
     for record in record_iterator(args.bam):
         if record.is_secondary or record.mapping_quality < 255:
@@ -50,6 +52,7 @@ def main():
             continue
 
         n += 1
+        n_per_cell = n / n_cells if n_cells is not None else 0
         combinations.add((cell_barcode, umi))
         if n % 10000 == 0:
             saturation = 1 - (len(combinations) / n)
@@ -58,7 +61,7 @@ def main():
 
     saturation = 1 - (len(combinations) / n)
     print(f"{saturation:6.4f} {int(saturation*100)*'*'}", file=sys.stderr)
-    print(n, f"{saturation:.4f}", sep="\t")
+    print(n, n_per_cell, f"{saturation:.4f}", sep="\t")
     print(file=sys.stderr)
     print(n_not_allowed, "records with disallowed cell barcodes skipped", file=sys.stderr)
     print(n, "remaining records", file=sys.stderr)
