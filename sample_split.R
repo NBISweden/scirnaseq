@@ -65,6 +65,8 @@ meta.cell = data.frame(FullBC = colnames(mtx), CellBC = cell2bc,
 sdata = CreateSeuratObject(mtx, meta.data = meta.cell)
 sdata = SetIdent(sdata, value ="Sample") 
 
+saveRDS(sdata, file.path(params$outdir, paste0("allsamples.rds")))
+
 t = table(sdata$Sample)
 cat("Cells per sample:\n", paste(names(t),": ",t,"\n"))
 
@@ -123,6 +125,6 @@ dev.off()
 sobjects = SplitObject(sdata, split.by = "Sample")
 
 for(so in names(sobjects)){
-  outfile = file.path(params$outdir, paste0("sdata_",so, ".Rds"))
+  outfile = file.path(params$outdir, paste0(so, ".rds"))
   saveRDS(sobjects[so], outfile)
 }
