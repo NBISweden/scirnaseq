@@ -206,7 +206,7 @@ rule report:
 
 rule split_samples_and_plot:
     output:
-        directory("out/per-sample/"),
+        directory("out/rds/"),
         pdf="out/samples.pdf",
     input:
         expand("out/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
@@ -217,4 +217,4 @@ rule split_samples_and_plot:
         " -i out/filtered/"
         " -m {input.samples_tsv}"
         " --pdf {output.pdf}"
-        " -o out/per-sample/"
+        " -o out/rds/"
