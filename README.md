@@ -106,13 +106,15 @@ If there are no error messages, run the pipeline:
 
 ## Pipeline result files
 
-These are the relevant result files created when running the pipeline.
+All result files are placed into a newly created `out/` directory.
+These are the relevant ones:
 
 * `report.html`: QC report
 * `p7-mismatches.tsv`: Statistics with P7 index mismatches.
   Also shown in `report.html`.
-* `per-sample/`: Directory with per-sample Seurat objects (`.Rds`)
-* `star-out/Solo.out/Gene/filtered/`:
+* `rds/`: Directory with Seurat objects (`.rds` files), one for each sample
+  and one named ``allsamples.rds`` containing all samples.
+* `star/Solo.out/Gene/filtered/`:
   Directory with Seurat-compatible counts matrix with overall counts.
   This is not split by sample and uses default STAR solo filtering.
 * `filtered/`: Count matrix using adjusted STAR solo filtering that should
