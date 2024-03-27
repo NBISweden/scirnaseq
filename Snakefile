@@ -161,7 +161,7 @@ rule star_solo:
         " --outSAMattributes NH HI nM AS CR UR GX GN"
 
 
-rule star_solo_cell_filter:
+rule filter_cells:
     output:
         expand("out/filtered/{name}", name=("matrix.mtx", "features.tsv", "barcodes.tsv")),
     input:
