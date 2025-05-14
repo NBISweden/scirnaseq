@@ -131,8 +131,7 @@ These are the relevant ones:
 
 See the Nature Protocols paper (https://doi.org/10.1038/s41596-022-00752-0)
 and also
-https://teichlab.github.io/scg_lib_structs/methods_html/sci-RNA-seq3.html.
-
+https://teichlab.github.io/scg_lib_structs/methods_html/sci-RNA-seq_family.html.
 
 ### Structure of R1
 
