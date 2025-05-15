@@ -49,7 +49,7 @@ starting a new shell (for example, after logging in again).
 ## Before running the pipeline
 
 The reference and annotations need to be prepared.
-This only needs to be done once.
+This only needs to be done once per genome.
 These commands work for GRCm39:
 
     mkdir -p ref/GRCm39
@@ -72,9 +72,14 @@ These commands work for GRCm39:
        mkdir run01
        cd run01
 
-2. Make the compressed FASTQ files available in a `raw-reads/` subdirectory.
-   The files must have the extension `.fastq.gz` and contain the text `_R1_`
-   in their name. We recommended using symbolic links.
+2. Make the compressed FASTQ files for the R1 and R2 reads available in a
+   `raw-reads/` subdirectory.
+   (We recommended using symbolic links.)
+   The reads must already have been demultiplexed by P7 index (I1).
+   The files must have the extension `.fastq.gz`.
+   R1 reads must have `_R1_` in the file name,
+   and R2 reads must have `_R2_` in the file name.
+
 3. Make the indexed reference available, for example using a symbolic link:
 
        ln -s ../ref ref
@@ -106,7 +111,7 @@ If there are no error messages, run the pipeline:
 
 ## Pipeline result files
 
-All result files are placed into a newly created `out/` directory.
+All result files and folders are placed into a newly created `out/` directory.
 These are the relevant ones:
 
 * `report.html`: QC report
@@ -147,21 +152,24 @@ https://teichlab.github.io/scg_lib_structs/methods_html/sci-RNA-seq_family.html.
 
 Total: 33 or 34 nt. Sequenced reads have 34 nt.
 
+The header of R1 must contain the P7 index sequence (I1).
+
 
 ### Other reads
 
-- R2 is the RNA read
-- I1 is the third index
-- I2 is the sample index
+The R2 read needs to contain the RNA sequence.
 
-The I1 and I2 reads do not need to exist as FASTQ files.
-I2 is ignored by the pipeline.
+The I1 and I2 reads may exist, but are not used by the pipeline. Instead, the
+P7 index (in I1) is read from the header of the R1 file.
+
+I2 is currently ignored by the pipeline.
 
 
 ## Pipeline overview
 
-* Input data is assumed to already have been demultiplexed by P7 index (I1)
-* Cutadapt is run twice to move ligation index, UMI and RT index from R2 into the read header. R2 is empty afterwards and discarded.
+* Input data must already have been demultiplexed by P7 index (I1)
+* Cutadapt is run twice to move ligation index, UMI and RT index from R2 into
+  the read header. R2 is empty afterwards and discarded.
 * Script `simulatecb.py` simulates R2 reads similar to 10X Chromium reads.
   The sequence consists of:
   - RT index (10 nt)
