@@ -21,7 +21,7 @@ rule final:
 
 rule trim_ligation_index:
     output:
-        fastq=temp("out/round1/{name}_{extra}.fastq.gz"),
+        fastq=temp("out/round1/{name}_{extra}.interleaved.fastq.gz"),
         json="out/round1/{name}_{extra}.cutadapt.json",
     input:
         r1_fastq="raw-reads/{name}_R1_{extra}.fastq.gz",
@@ -51,7 +51,7 @@ rule trim_umi_and_rt_index:
         fastq=temp("out/round2/{name}.fastq.gz"),
         json="out/round2/{name}.cutadapt.json",
     input:
-        fastq="out/round1/{name}.fastq.gz",
+        fastq="out/round1/{name}.interleaved.fastq.gz",
         rt_indices_fasta="rt-indices.fasta",
     log:
         "out/round2/{name}.cutadapt.log"
