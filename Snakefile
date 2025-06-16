@@ -14,6 +14,8 @@ NAMES = [r1.name.replace("_R1_", "_").replace(".fastq.gz", "") for r1 in R1_FAST
 if not R1_FASTQS:
     sys.exit("No FASTQ files found in raw-reads/ directory")
 
+localrules: write_allowed_barcodes, merge_p7_mismatch_stats, report
+
 
 rule final:
     input: "out/report.html", "out/samples.pdf"
@@ -135,6 +137,7 @@ rule star_solo:
             which=("filtered", "raw"),
             name=("matrix.mtx", "features.tsv", "barcodes.tsv")
         ),
+        bam="out/star/Aligned.out.bam",
     input:
         allowed_barcodes_txt="out/allowed-barcodes.txt",
         ref="ref/GRCm39/star/Genome",
