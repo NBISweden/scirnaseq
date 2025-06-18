@@ -16,13 +16,14 @@ The pipeline presented here was developed independently.
 ## Installation
 
 
-### On rackham (UPPMAX)
+### On dardel
 
-On the Swedish [UPPMAX](https://www.uppmax.uu.se/) cluster rackham,
-Conda is preinstalled with Bioconda pre-configured,
-so these commands suffice:
+On the KTH cluster dardel, these commands should work:
 
-    module load conda
+    module load miniconda3
+    conda config --add channels bioconda
+    conda config --add channels conda-forge
+    conda config --set channel_priority strict
     conda env create -n scirnaseq -f environment.yml
     conda activate scirnaseq
 
