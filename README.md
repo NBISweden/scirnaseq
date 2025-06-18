@@ -85,7 +85,6 @@ These commands work for GRCm39:
        ln -s ../ref ref
 
 4. Create these files:
-   * `ligation-indices-with-linker.fasta`
    * `ligation-indices.fasta`
    * `p7-indices.fasta`
    * `rt-indices.fasta`

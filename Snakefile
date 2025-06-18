@@ -14,11 +14,19 @@ NAMES = [r1.name.replace("_R1_", "_").replace(".fastq.gz", "") for r1 in R1_FAST
 if not R1_FASTQS:
     sys.exit("No FASTQ files found in raw-reads/ directory")
 
-localrules: write_allowed_barcodes, merge_p7_mismatch_stats, report
-
+localrules: ligation_indices_with_linker, write_allowed_barcodes, merge_p7_mismatch_stats, report
 
 rule final:
     input: "out/report.html", "out/samples.pdf"
+
+
+rule ligation_indices_with_linker:
+    output:
+        fasta="out/ligation-indices-with-linker.fasta"
+    input:
+        fasta="ligation-indices.fasta"
+    shell:
+        """awk 'NR%2==0{{$0=$0 "CAGAGC"}}; 1' {input} > {output}"""
 
 
 rule trim_ligation_index:
@@ -28,7 +36,7 @@ rule trim_ligation_index:
     input:
         r1_fastq="raw-reads/{name}_R1_{extra}.fastq.gz",
         r2_fastq="raw-reads/{name}_R2_{extra}.fastq.gz",
-        ligation_indices_with_linker_fasta="ligation-indices-with-linker.fasta",
+        ligation_indices_with_linker_fasta=rules.ligation_indices_with_linker.output,
     log:
         "out/round1/{name}_{extra}.cutadapt.log"
     threads: 8
