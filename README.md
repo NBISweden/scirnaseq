@@ -83,7 +83,7 @@ These commands work for GRCm39:
 
 3. Make the indexed reference available, for example using a symbolic link:
 
-       ln -s ../ref ref
+       ln -s ../ref/GRCm39 ref
 
 4. Create these files:
    * `ligation-indices.fasta`

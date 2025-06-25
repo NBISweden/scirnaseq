@@ -148,7 +148,7 @@ rule star_solo:
         bam="out/star/Aligned.out.bam",
     input:
         allowed_barcodes_txt="out/allowed-barcodes.txt",
-        ref="ref/GRCm39/star/Genome",
+        ref="ref/star/Genome",
         r1_fastqs=expand("out/cb-reads/{name}.1.fastq.gz", name=NAMES),
         r2_fastqs=expand("out/cb-reads/{name}.2.fastq.gz", name=NAMES),
     params:
@@ -157,7 +157,7 @@ rule star_solo:
     threads: 99
     shell:
         "STAR"
-        " --genomeDir ref/GRCm39/star"
+        " --genomeDir ref/star"
         " --readFilesCommand zcat"
         " --readFilesIn {params.r2_fastqs} {params.r1_fastqs}"
         " --runThreadN {threads}"
