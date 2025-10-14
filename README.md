@@ -20,7 +20,7 @@ The pipeline presented here was developed independently.
 
 On the KTH cluster dardel, these commands should work:
 
-    module load bioinfo-tools miniconda3
+    module load PDC miniconda3
     conda config --add channels bioconda
     conda config --add channels conda-forge
     conda config --set channel_priority strict
