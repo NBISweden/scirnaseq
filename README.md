@@ -15,23 +15,39 @@ The pipeline presented here was developed independently.
 
 ## Installation
 
+To make the various programs needed by the pipeline available,
+we use Conda and the [Bioconda]((http://bioconda.github.io/) channel.
+
+For Conda, a project-specific *environment* needs to be created that will
+contain the required programs.
+An environment is just a normal directory
+in which files and subfolders are organized in a certain way.
+
 
 ### On dardel
 
-On the KTH cluster dardel, these commands should work:
+On the KTH cluster *dardel*, the Conda environment should be placed in the
+project folder, not in the home directory, which will typically not have
+enough space. Use these commands:
 
     module load PDC miniconda3
     conda config --add channels bioconda
     conda config --add channels conda-forge
     conda config --set channel_priority strict
-    conda env create -n scirnaseq -f environment.yml
-    conda activate scirnaseq
+    cd /your/project/directory
+    conda env create -p condaenv/ -f ../path/to/environment.yml
 
-The first and last step need to be repeated when
-starting a new shell (for example, after logging in again).
+To activate the Conda environment
+(this needs to be re-done every time you log in):
+
+    module load PDC miniconda3
+    cd /your/project/directory
+    conda activate -p condaenv/
 
 
 ### Everywhere else
+
+If you are not on dardel, follow these steps:
 
 1. Install Conda
 2. [Configure the Bioconda channel](http://bioconda.github.io/#usage)
@@ -47,7 +63,7 @@ The last step of activating the environment needs to be repeated when
 starting a new shell (for example, after logging in again).
 
 
-## Before running the pipeline
+## Prepare reference and annotations before running the pipeline
 
 The reference and annotations need to be prepared.
 This only needs to be done once per genome.
@@ -104,7 +120,11 @@ Do a dry-run to test whether everything is set up correctly:
     snakemake --dry-run -p -s path/to/Snakefile
 
 Replace `path/to/Snakefile` appropriately (for example, `../Snakefile`).
-If there are no error messages, run the pipeline:
+
+If there are no error messages, continue to actually run the pipeline.
+
+If you *do not* need to submit a compute job, use the same command as above,
+but without `--dry-run`:
 
     snakemake -p --cores=all -s path/to/Snakefile
 
