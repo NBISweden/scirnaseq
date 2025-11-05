@@ -92,7 +92,7 @@ rule write_allowed_barcodes:
     input:
         rt_indices_fasta="rt-indices.fasta",
         ligation_indices_fasta="ligation-indices.fasta",
-        p7_indices_fasta="p7-indices.fasta",
+        p7_indices_fasta="out/p7-indices.fasta",
     params: script=Path(workflow.basedir) / "allowedbarcodes.py"
     shell:
         "python3 {params.script}"
@@ -104,6 +104,18 @@ rule write_allowed_barcodes:
         " mv {output.allowed_barcodes_txt}.tmp {output.allowed_barcodes_txt}"
 
 
+rule detect_p7_indices:
+    output:
+        fasta="out/p7-indices.fasta"
+    input:
+        fastq=R1_FASTQS
+    params: script=Path(workflow.basedir) / "p7indices.py"
+    shell:
+        "python3 {params.script}"
+        " {input.fastq}"
+        " > {output.fasta}"
+
+
 rule simulate_cell_barcode:
     output:
         r1_fastq=temp("out/cb-reads/{name}.1.fastq.gz"),
@@ -113,7 +125,7 @@ rule simulate_cell_barcode:
         fastq="out/round2/{name}.fastq.gz",
         rt_indices_fasta="rt-indices.fasta",
         ligation_indices_fasta="ligation-indices.fasta",
-        p7_indices_fasta="p7-indices.fasta",
+        p7_indices_fasta="out/p7-indices.fasta",
     params: script=Path(workflow.basedir) / "simulatecb.py"
     shell:
         "python3 {params.script}"

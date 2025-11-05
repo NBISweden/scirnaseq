@@ -103,7 +103,6 @@ These commands work for GRCm39:
 
 4. Create these files:
    * `ligation-indices.fasta`
-   * `p7-indices.fasta`
    * `rt-indices.fasta`
 
 5. Create a samplesheet in TSV format named `samples.tsv`:
