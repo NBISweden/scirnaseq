@@ -42,8 +42,9 @@ To activate the Conda environment
 
     module load PDC miniconda3
     cd /your/project/directory
-    conda activate -p condaenv/
+    source activate condaenv/
 
+(The `/` at the end of `condaenv/` is important.)
 
 ### Everywhere else
 
